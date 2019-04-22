@@ -73,7 +73,7 @@ per task. Combining these two ideas, the network can learn different tasks whith
 ![](Fig3.jpg)
 
 ### Learning Without Forgetting (LwF)
-This approach defines three sets of parameters: $\theta_s$ are the shared parameters among all different tasks. For each given task, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters
+This approach defines three sets of parameters: <img src="https://latex.codecogs.com/gif.latex?\theta_s" style="margin-top: 3px"/> are the shared parameters among all different tasks. For each given task, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters
 defined specifically for this task, and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> denotes all the parameters from the previous tasks. <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> parameters are added to the last layer of the network 
 (Typically a fully-connected layer) upon the arrival of new task data. To train this network for the new task, first they freeze <img src="https://latex.codecogs.com/gif.latex?\theta_S" style="margin-top: 3px"/> and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> and train the network 
 until the convergence of <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/>. Then they use these parameters as an initilization for joint training of all parameters of the network. This method is based on the 
