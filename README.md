@@ -138,7 +138,7 @@ Alpha | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :
 
 
 # Problem Formulation
-We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point x_k, the output of the network is  $F(x_k;\theta)$. We approximate the gradient as $F(x_k;\theta+\delta) - F(x_k;\theta) \cong \sum_{i,j} g_{ij}(x_k)\delta_{ij}$
+We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point <x_k>, the output of the network is  $F(x_k;\theta)$. We approximate the gradient as $F(x_k;\theta+\delta) - F(x_k;\theta) \cong \sum_{i,j} g_{ij}(x_k)\delta_{ij}$
 where $g_{ij}(x_k) = \frac{\partial(F(x_k;\theta))}{\partial \theta_{ij}}$ and $\delta = \{\delta_{ij}\}$ is a small perturbation, in the parameters $\theta = \{\theta_{ij}\}$. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight $\Omega_{tij}$ in task $t$ for parameter $\theta_{ij}, \Omega_{tij}= \frac{1}{M} \sum_{k} ||g_{ij}(x_k)||$,
 in which $M$ is the size of training set. When a new task $t$
 is fetching into the network, we have in addition to the new task prediction error loss $L_t(\theta)$, a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
