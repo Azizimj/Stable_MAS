@@ -145,11 +145,9 @@ is fetching into the network, we have in addition to the new task prediction err
 
 ![](loss.png)
 
-With &lambda; a hyperparameter for the regularizer and &theta<sub>tij</sub>* is the ij parameter learned in task t. We add &alpha;<sub>t</sub> to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. &sum;<sub>ij</sub> &alpha;<sub>t</sub>&Omega;<sub>tij</sub> = &sum;<sub>ij</sub> &alpha<sub>t'</sub>&Omega;<sub>t'ij</sub>   &forall; t, t'. 
+With &lambda; a hyperparameter for the regularizer and &theta;<sub>tij</sub>* is the ij parameter learned in task t. We add &alpha;<sub>t</sub> to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. &sum;<sub>ij</sub> &alpha;<sub>t</sub>&Omega;<sub>tij</sub> = &sum;<sub>ij</sub> &alpha<sub>t'</sub>&Omega;<sub>t'ij</sub>   &forall; t, t'. 
 Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda;. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
 
 # Implementation Details
 
 # Results
-
-![](Formulation.jpg)
