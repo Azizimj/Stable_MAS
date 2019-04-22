@@ -30,23 +30,98 @@ This software package is freely available for research purposes.
 ## Our Work
 
 # Introduction
+Learning algorithms, in particular deep learning methods achieved a great performance on supervised learning tasks such as image classification, object detection, and speech recognition. 
+The general formulation of classic supervised learning is to minimize the following risk minimization problem based on the a finite sample from the unknown, but fixed distribution P*.
 
-Millions of images with new captions and tags and a huge amount of streaming data  such  as  videos  are  generated  and  uploaded  to  the  internet  daily. These new data may contain new topics, trends, and patterns. The classic supervised learning algorithms have been designed to reach a high performance on a specific task of image classification, object detection or speech recognition. These algorithms do not have the ability of continuous learning from different tasks and datasets during the time. Performing these algorithms to the new datasets may lead to forgetting the learned model on the previous tasks issue which is known as catastrophic forgetting. Lifelong learning has emerged to address the issue of catastrophic forgetting and enabling learning models to have an acceptable performance on both current and previous tasks. In this project we try to implement a model-based lifelong learning approach ”Memory Aware Synapses”. We also extend the idea of the paper, and with a change in the problem formulation, we reduce the average forgetting value over different tasks.
+![](eq1.jpg)
 
-Memory-aware Synapses enjoys several properties such as constant memory size, Problem agnostic, supporting unlabeled data, adaptive, and also can be established on top of a pre-trained network on the previous tasks. Problem Agnostic means this method can be generalized to any dataset and it is not limited to specific tasks or datasets. By adaptive we mean the capability of a method to adapt the learned model continually to a new task from the same or different environment. Thus it means the samples from different tasks should not necessarily follow a unique distribution and can have different ground truth distributions. The Memory-aware Synapses (MAS) satisfies all the properties mentioned above; However, it might not work equally well on all tasks. If the tasks which should be learned come in a different order, the trained model can be different showing it puts more weights to the parameters of the most recent tasks. To cope with this issue, we introduce new parameters to equalize the importance of the tasks regardless of their training order. The experimental results show the same performance when we change the order of tasks and demonstrate a better average forgetting comparing to MAS. We call the independence of the model from the order of tasks the consistency property. 
+However, the assumption that the training data follow a fixed distribution during the time has several limitations and many applications and problems cannot be fomulated 
+in this framework. For instance, if the learning problem consists of several tasks with different distributions (different image datasets), updating the parameters of the model
+upon the arrival of data from the new task leads to poor performance on the previous learned tasks. 
+The procedure of continuous learning of different tasks with just one model such as a deep neural network is known as lifelong learning. Lifelong learning enables us to learn continually
+from tones of images, videos, and other media contents generated daily on internet, without forgetting the learned model based on the previous data. The following figure illustrates 
+the lifelong learning high-level idea. 
+
+![](HL.png)
+
+
+A question might arise is that whether the classic formulation of supervised learning can lead to a reliable performance on different tasks and datasets. The experimental results
+show that by updating the parameters of a deep neural network upon the arrival of new task, the performance of the network on previous tasks decreases profoundly. This phenomenon is known as catastrophic forgetting. 
+Lifelong learning has emerged to address the issue of catastrophic forgetting and enabling learning models to have an acceptable performance on both current and previous tasks.  
+We can summarize the assumptions of lifelong learning as follows: 
+
+1. In contrast to the classical supervised learning, Lifelong learning is not task specific, and its goal is to learn different tasks during the time. 
+2. When a new task is arrived, the model does not have access to sample data from the previous tasks. 
+3. It is similar to the online learning in a sense that the whole data from different tasks are not available and they arrive during the time; However, unlike the online learning we cannot assume the data points are sampled from a single data distribution.
+Each task can have its own distribution. In this way, the lifelong learning is a harder problem.
+
+![](Fig1.png)
+
 
 # Existing Approaches
 
-A common application of Lifelong learning is in the context of image processing where the goal is to learn several image classification tasks with only one convolutional neural networks. To deal with the problem of catastrophic forgetting, several methods have been proposed.[1] Defines two set of parameters: $\theta_s$ are the shared parameters among all different tasks. For each given task, $\theta_n$ represents the set of parameters defined specifically for this task and $\theta_0$ denotes all the parameters from the previous tasks. During the first 
+In this section we introduce several well-known lifelong learning methods propsed in recent years. Generally speaking, these methods can be divided into two groups:
+## Data-based approaches
+**Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the data distribution mismatch between tasks is limited. 
+Data based approaches are mainly designed for a classification scenario and overall, the need of these approaches to have a preprocessing step before each new task, 
+to record the targets for the previous tasks is an additional limitation. 
+
+### Encoder-based Lifelong Learning (EBLL)
+In this method, for each new task an autoencoder which projects the dataset to a lower dimensional space is learned. Also a fully connected layer is added to the network
+per task. Combining these two ideas, the network can learn different tasks whithout completely forgetting the previous tasks.
+
+![](Fig3.jpg)
+
+### Learning Without Forgetting (LwF)
+This approach defines three sets of parameters: $\theta_s$ are the shared parameters among all different tasks. For each given task, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters
+defined specifically for this task, and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> denotes all the parameters from the previous tasks. <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> parameters are added to the last layer of the network 
+(Typically a fully-connected layer) upon the arrival of new task data. To train this network for the new task, first they freeze <img src="https://latex.codecogs.com/gif.latex?\theta_S" style="margin-top: 3px"/> and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> and train the network 
+until the convergence of $\theta_n$. Then they use these parameters as an initilization for joint training of all parameters of the network. This method is based on the 
+optimization of the network for the data of the new task. Thus it can be considered as a data-based approach. 
+
+![](Fig4.jpg)
 
 ## Model Based Approaches
-Model base approaches focus on the parameters of the network instead of depending on the task data. Most similar to our work are. Like them, we estimate an importance weight for each model parameter and add a regularizer when training a new task that penalizes any changes to important parameters.
-The difference lies in the way the importance weights are computed. In the Elastic Weight Consolidation work this is done based on an approximation of the diagonal of the Fisher information matrix. In the Synaptic Intelligence work importance weights are computed during training in an online manner. To this end, they record how much the loss would change due to a change in a specific parameter and accumulate this information over the training trajectory. However, also this method has some drawbacks:
+Model base approaches focus on the parameters of the network instead of depending on the task data. They estimate an importance weight for each model parameter and add a regularizer when training a new task that penalizes any changes to important parameters.
+The difference between methods in this approach lies in the way the importance weights are computed. 
 
+###  Elastic Weight Consolidation
+This method is based on the intution that in an over-parametrized regime (The number of nodes in the network is from the order of data points) there exists a <img src="https://latex.codecogs.com/gif.latex?\theta_B^*" style="margin-top: 3px"/> solution for task B which is very close to 
+<img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/> a solution to task A. Based on this idea, they choose a minimizer of the network to task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>.
+
+![](Fig2.jpg)
+
+###  Synaptic Intelligence (SI)
+In the Synaptic Intelligence work importance weights are computed during training in an online manner. To this end, they record how much the loss would change due to a change in a specific parameter and accumulate this information over the training trajectory. However, also this method has some drawbacks:
 1. Relying on the weight changes in a batch gradient descent might overestimate the importance of the weights, as noted by the authors.
 2. When starting from a pretrained network, as in most practical computer vision applications, some weights might be used without big changes. As a result, their importance will be underestimated.
 3. The computation of the importance is done during training and fixed later.
 
+
+# Memory Aware Synapses (MAS)
+As a high level description, memory-aware synapses is a model-based approach which computes the importance of all network parameters by taking the gradient of output logits with 
+respect to each weight parameter. Then it penalizes the objective function based on how much it changes the weights. If a weight parameter has more importance, the objective 
+function is penalized more. By adding the mentioned regularizer, MAS outperforms the other model-based approaches as we experiment it on different lifelong learning problems.
+
+The below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the parameters importance based on the loss, 
+comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast to the previous model-based approaches, MAS estimates
+the parameters importance, after convergence, based on the sensitivity of the learned function to their changes (b). This allows using additional unlabeled data points (in orange).
+When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b), while adjusting not important parameters 
+to ensure good performance on the new task (c).
+
+
+![](MAS1.png)
+
+
+Memory-aware Synapses enjoys several properties such as constant memory size, problem agnostic,  supporting  unlabeled  data,  adabptability, and also it can be established on 
+top  of a pre-trained network on the previous tasks. Problem  agnostic property means this method can be generalized to any dataset and it is not limited to specific tasks or 
+datasets. By adaptability we mean the capability of a method to adapt the learned model continually to a new task from the same or different environment. Thus it means the 
+samples from different tasks should not necessarily follow a unique distribution and can have different ground truth distributions. The Memory-aware Synapses(MAS) satisfies 
+all the properties mentioned above; However, it might not work equally well on all tasks. If the tasks which should be learned come in a different order, the trained model can 
+be different, showing it puts more weights to the parameters of the most recent tasks. To cope with this issue, we introduce new parameters to MAS model to equalize the importance
+of the tasks regardless of their training order. The experimental results show the same performance when we change the order of tasks and demonstrate a better average forgetting
+comparing to MAS. We call the independence of the model from the order of tasks the consistency property. The following table depicts the properties satisfied by different models.
+As we can observe, by introducing the new parameters to MAS model, we can outperform it and reduce the catastrophic forgetting.
 
 **Method** | **Type** | **Constant Memory** | **Problem Agnostic** | **On Pre-trained** | **Unlabeled Data** | **Adaptive** | **Consistency**
 --- | --- | --- | --- | --- | --- | --- | ---
@@ -58,3 +133,23 @@ SI | Model | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :x: | :x:
 MAS | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:
 Alpha | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:
 
+
+## A Simple Exmple to Show why MAS can consider some tasks more important.
+
+
+# Problem Formulation
+We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point $x_k$, the output of the network is  $F(x_k;\theta)$. We approximate the gradient as $F(x_k;\theta+\delta) - F(x_k;\theta) \cong \sum_{i,j} g_{ij}(x_k)\delta_{ij}$
+where $g_{ij}(x_k) = \frac{\partial(F(x_k;\theta))}{\partial \theta_{ij}}$ and $\delta = \{\delta_{ij}\}$ is a small perturbation, in the parameters $\theta = \{\theta_{ij}\}$. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight $\Omega_{tij}$ in task $t$ for parameter $\theta_{ij}, \Omega_{tij}= \frac{1}{M} \sum_{k} ||g_{ij}(x_k)||$,
+in which $M$ is the size of training set. When a new task $t$
+is fetching into the network, we have in addition to the new task prediction error loss $L_t(\theta)$, a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
+\begin{equation*}
+    L_t(\theta) = L_n(\theta) + \sum_{t'=1}^{t-1}\sum_{ij} \alpha_{t'}\Omega_{t'ij}(\theta_{ij}-\theta_{t'ij}^*)^2
+\end{equation*}
+With $\lambda$ a hyperparameter for the regularizer and $\theta_{tij}^*$ is the $ij$ parameter learned in task $t$. We add $\alpha_t$ to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. $\sum_{ij} \alpha_t\Omega_{tij} = \sum_{ij} \alpha_{t'}\Omega_{t'ij} \hspace{.1in} \forall t, t'$. 
+Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like $\sum_{t} \alpha_t= \lambda$. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
+
+# Implementation Details
+
+# Results
+
+![](Formulation.jpg)
