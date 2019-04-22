@@ -138,15 +138,15 @@ Alpha | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :
 
 
 # Problem Formulation
-We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point x<sub>k</sub>, the output of the network is  F(x<sub>k</sub>;<img src="https://latex.codecogs.com/gif.latex?\theta" style="margin-top: 3px"/>). We approximate the gradient as F(x<sub>k</sub>;&theta+&delta) - F(x<sub>k</sub>;&theta) &cong &sum,sub>i,j</sub> g<sub>ij</sub>(x<sub>k</sub>)\delta<sub>ij</sub>
-where g<sub>ij</sub>(x<sub>k</sub>) = &frac{&partial(F(x<sub>k</sub>;&theta))}{&partial &theta<sub>ij</sub>} and &delta = &{&delta<sub>ij</sub>&} is a small perturbation, in the parameters &theta = &{&theta<sub>ij</sub>&}. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight &Omega<sub>tij</sub> in task t for parameter &theta<sub>ij</sub>, &Omega<sub>tij</sub>= &frac{1}{M} &sum<sub>k</sub> ||g<sub>ij</sub>(x<sub>k</sub>)||,
-in which M is the size of training set. When a new task t
-is fetching into the network, we have in addition to the new task prediction error loss L<sub>t</sub>(&theta), a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
-&begin{equation*}
-    L<sub>t</sub>(&theta) = L<sub>n</sub>(&theta) + &sum<sub>t'=1</sub>^{t-1}\sum_{ij} \alpha_{t'}\Omega_{t'ij}(\theta_{ij}-\theta_{t'ij}^*)^2
-\end{equation*}
-With $\lambda$ a hyperparameter for the regularizer and $\theta_{tij}^*$ is the $ij$ parameter learned in task $t$. We add $\alpha_t$ to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. $\sum_{ij} \alpha_t\Omega_{tij} = \sum_{ij} \alpha_{t'}\Omega_{t'ij} \hspace{.1in} \forall t, t'$. 
-Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like $\sum_{t} \alpha_t= \lambda$. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
+We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point x<sub>k</sub>, the output of the network is  F(x<sub>k</sub>;&theta;). We approximate the gradient as F(x<sub>k</sub>;&theta;+&delta;) - F(x<sub>k</sub>;&theta;) &cong; &sum;<sub>i,j</sub> g<sub>ij</sub>(x<sub>k</sub>)&delta;<sub>ij</sub>
+where g<sub>ij</sub>(x<sub>k</sub>) = &frac;{&partial;(F(x<sub>k</sub>;&theta;))}{&partial; &theta;<sub>ij</sub>} and &delta; = &{&delta;<sub>ij</sub>&} is a small perturbation, in the parameters &theta; = &{&theta;<sub>ij</sub>&}. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight &Omega;<sub>tij</sub> in task t for parameter &theta;<sub>ij</sub>, &Omega;<sub>tij</sub>= &frac;{1}{M} &sum;<sub>k</sub> ||g<sub>ij</sub>(x<sub>k</sub>)||,
+in which M; is the size of training set. When a new task t;
+is fetching into the network, we have in addition to the new task prediction error loss L<sub>t</sub>(&theta;), a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
+&begin;{equation*}
+    L<sub>t</sub>(&theta;) = L<sub>n</sub>(&theta;) + &sum;<sub>t'=1</sub>^{t-1}&sum;<sub>ij</sub> &alpha;<sub>t'</sub>}&Omega;<sub>t'ij</sub>(&theta;<sub>ij</sub>-&theta;<sub>t'ij</sub>^*)^2
+&end{equation*}
+With &lambda; a hyperparameter for the regularizer and &theta<sub>tij</sub>^* is the ij parameter learned in task t. We add &alpha;<sub>t</sub> to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. &sum;<sub>ij</sub> &alpha;<sub>t</sub>&Omega;<sub>tij</sub> = &sum<sub>ij</sub> &alpha<sub>t'</sub>&Omega;<sub>t'ij</sub> &hspace;{.1in} &forall; t, t'. 
+Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda;. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
 
 # Implementation Details
 
