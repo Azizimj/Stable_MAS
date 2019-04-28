@@ -1,34 +1,3 @@
-# MAS
-Humans can learn in a continuous manner. Old rarely utilized knowledge can be overwritten by new incoming information while important, frequently used knowledge is prevented from being erased. In artificial learning systems,
-lifelong learning so far has focused mainly on accumulating knowledge over tasks and overcoming catastrophic forgetting. In this paper, we argue that, given the limited model capacity and the unlimited new information to be learned, knowl-
-edge has to be preserved or erased selectively. Inspired by neuroplasticity, we propose a novel approach for lifelong learning, coined Memory Aware Synapses(MAS). It computes the importance of the parameters of a neural network in an
-unsupervised and online manner. Given a new sample which is fed to the network,MAS accumulates an importance measure for each parameter of the network,  based  on  how  sensitive  the  predicted  output  function  is  to  a  change  in
-this parameter. When learning a new task, changes to important parameters can then be penalized, effectively preventing important knowledge related to previous tasks from being overwritten. Further, we show an interesting connection between
-a local version of our method and Hebb’s rule, which is a model for the learning process  in  the  brain.  We  test  our  method  on  a  sequence  of  object  recognition tasks and on the challenging problem of learning an embedding for predicting
-<subject, predicate, object> triplets. We show state-of-the-art performance and, for the first time, the ability to adapt the importance of the parameters based on unlabeled data towards what the network needs (not) to forget, which may vary
-depending on test conditions.
-
-![Global Model](https://raw.githubusercontent.com/rahafaljundi/MAS-Memory-Aware-Synapses/master/teaser_fig.png)
-
-This directory contains a pytorch implementation of Memory Aware Synapses: Learning what not to forget method. A demo file that shows a learning scenario in mnist split set of tasks is included.
-
-## Authors
-
-Rahaf Aljundi, Francesca Babiloni, Mohamed Elhoseiny, Marcus Rohrbach and Tinne Tuytelaars
-
-
-For questions about the code, please contact me, Rahaf Aljundi (rahaf.aljundi@esat.kuleuven.be)
-## Requirements
-The code was built using pytorch version 0.3, python 3.5 and cuda 9.1
-## Citation
-Aljundi R., Babiloni F., Elhoseiny M., Rohrbach M., Tuytelaars T. (2018) Memory Aware Synapses: Learning What (not) to Forget. In:  Computer Vision – ECCV 2018. ECCV 2018. Lecture Notes in Computer Science, vol 11207. Springer, Cham
-
-## License
-
-This software package is freely available for research purposes.
-
-## Our Work
-
 # Introduction
 Learning algorithms especially deep learning methods achieved a reliable performance on supervised learning tasks such as image classification, object detection, and speech recognition.
 The general formulation of classic supervised learning is to minimize the following risk minimization problem based on a finite sample from the unknown, but fixed distribution P*.
@@ -139,16 +108,21 @@ SI | Model | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :x: | :x:
 MAS | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:
 Alpha | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:
 
+
+
 # Problem Formulation
-We use the model introduced in the paper, to start with and improve it as follows. For a given data point x<sub>k</sub>, the output of the network is  F(x<sub>k</sub>;&theta;). We approximate the gradient as F(x<sub>k</sub>;&theta;+&delta;) - F(x<sub>k</sub>;&theta;) &cong; &sum;<sub>i,j</sub> g<sub>ij</sub>(x<sub>k</sub>)&delta;<sub>ij</sub>
-where g<sub>ij</sub>(x<sub>k</sub>) = dF(x<sub>k</sub>;&theta;)/d&theta;<sub>ij</sub> and &delta; = {&delta;<sub>ij</sub>} is a small perturbation, in the parameters &theta; = {&theta;<sub>ij</sub>}. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight &Omega;<sub>tij</sub> in task t for parameter &theta;<sub>ij</sub>, &Omega;<sub>tij</sub>= 1/M &sum;<sub>k</sub> ||g<sub>ij</sub>(x<sub>k</sub>)||,
-in which M; is the size of training set. When a new task t;
-is fetching into the network, we have in addition to the new task prediction error loss L<sub>t</sub>(&theta;), a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
+We use the model introduced in \cite{DBLP:journals/corr/abs-1711-09601} to start with and improve it as follows. For a given data point $x_k$, the output of the network is  $F(x_k;\theta)$. We approximate the gradient as $F(x_k;\theta+\delta) - F(x_k;\theta) \cong \sum_{i,j} g_{ij}(x_k)\delta_{ij}$
+where $g_{ij}(x_k) = \frac{\partial(F(x_k;\theta))}{\partial \theta_{ij}}$ and $\delta = \{\delta_{ij}\}$ is a small perturbation, in the parameters $\theta = \{\theta_{ij}\}$. So we consider a few last epochs of the learning to be able to have better estimation of the parameters importance. Our goal is to preserve the prediction of the network (the learned function) at each observed data point and prevent changes to parameters that are important for this prediction. We then accumulate the gradients over the given data points to obtain importance weight $\Omega_{tij}$ in task $t$ for parameter $\theta_{ij}, \Omega_{tij}= \frac{1}{M} \sum_{k} ||g_{ij}(x_k)||$,
+in which $M$ is the size of training set. When a new task $t$
+is fetching into the network, we have in addition to the new task prediction error loss $L_t(\theta)$, a regularizer that penalizes changes to parameters that are deemed important for previous tasks: 
+\begin{equation*}
+    L_t(\theta) = L_n(\theta) + \sum_{t'=1}^{t-1}\sum_{ij} \alpha_{t'}\Omega_{t'ij}(\theta_{ij}-\theta_{t'ij}^*)^2
+\end{equation*}
+With $\lambda$ a hyperparameter for the regularizer and $\theta_{tij}^*$ is the $ij$ parameter learned in task $t$. We add $\alpha_t$ to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. $\sum_{ij} \alpha_t\Omega_{tij} = \sum_{ij} \alpha_{t'}\Omega_{t'ij} \hspace{.1in} \forall t, t'$. 
+Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like $\sum_{t} \alpha_t= \lambda$. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
 
-![](loss.png)
 
-With &lambda; a hyperparameter for the regularizer and &theta;<sub>tij</sub>* is the ij parameter learned in task t. We add &alpha;<sub>t</sub> to make sure that we impose a consistency among tasks and so increase the accuracy, i.e. &sum;<sub>ij</sub> &alpha;<sub>t</sub>&Omega;<sub>tij</sub> = &sum;<sub>ij</sub> &alpha<sub>t'</sub>&Omega;<sub>t'ij</sub>   &forall; t, t'. 
-Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda;. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results. 
+![](Formulation.jpg)
 
 # Implementation Details
 Since Pytorch is more flexible and gives more options for manipulating the gradients in back-propagation and changing the loss function comparing to the Tensorflow library, 
