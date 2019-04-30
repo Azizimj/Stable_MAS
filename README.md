@@ -90,7 +90,6 @@ As we stated above the MAS approach, computes the importance(gradient of the out
 To clarify the problem suppose we have a simple neural network with two weight parameters v and w, and two tasks T1 and T2. Let the
 following table demonstrate the importance of v and w with respect to each task.
 
-
 ![](Table.png)
 
 As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
