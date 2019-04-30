@@ -161,3 +161,14 @@ than the original MAS approach, and finally part (d) shows the worst-case perfor
 
 
 ![](Res3.png)  
+
+# References
+[1]  Aljundi, Rahaf, et al. "Memory aware synapses: Learning what (not) to forget." Proceedings of the European Conference on Computer Vision (ECCV). 2018.
+
+[2] Rannen, Amal, et al. "Encoder based lifelong learning." Proceedings of the IEEE International Conference on Computer Vision. 2017.
+
+[3] Li, Zhizhong, and Derek Hoiem. "Learning without forgetting." IEEE transactions on pattern analysis and machine intelligence 40.12 (2018): 2935-2947.
+
+[4] Kirkpatrick, James, et al. "Overcoming catastrophic forgetting in neural networks." Proceedings of the national academy of sciences 114.13 (2017): 3521-3526.
+
+[5] Zenke, Friedemann, Ben Poole, and Surya Ganguli. "Continual learning through synaptic intelligence." Proceedings of the 34th International Conference on Machine Learning-Volume 70. JMLR. org, 2017.
