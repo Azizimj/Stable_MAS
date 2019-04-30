@@ -91,7 +91,7 @@ To clarify the problem suppose we have a simple neural network with two weight p
 following table demonstrate the importance of v and w with respect to each task.
 
 
-![](Table1.png)
+![](Table.png)
 
 As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
 we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. In contrast to MAS, our proposed approach considers
