@@ -140,6 +140,12 @@ of alphas equals to 5, the maximum alpha is 1.03, while the minimum one is 0.97.
 dataset. Since the class distributions are more diverse the vulnerability to the forgetting is higher. 
 
 ## Results on the MNIST dataset
+Figure below shows the forgetting of each task for three different secnario. 
+
+![](MNIST1.png)
+
+
+
 (a) shows the forgetting value for each task for three different methods: Baseline (MAS default approach), Our method when the sum of alpha coefficients is N (number of tasks),
 and when the sum of alpha coefficients is 2N. (b) compares the average forgetting of 5 tasks. As we can observe, our method has less forgetting value comparing to the default MAS.
 (c) compares the validation accuracy per epochs for three different settings (Baseline, the sum of alphas equals to N, the sum of alphas equals to 2N).
