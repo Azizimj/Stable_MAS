@@ -1,12 +1,14 @@
 # Introduction
 Learning algorithms especially deep learning methods achieved a reliable performance on supervised learning tasks such as image classification, object detection, and speech recognition.
-The general formulation of classic supervised learning is to minimize the following risk minimization problem based on a finite sample from the unknown, but fixed distribution P*.
+The general objective of classic supervised learning is to minimize the following risk function based on a finite sample from the unknown, but fixed distribution P*.
 
 ![](eq1.jpg)
 
-However, the assumption that the training data follow a fixed distribution during the time has several limitations and many applications and problems cannot be formulated in this framework. For instance, if the learning problem consists of several tasks with different distributions (different image datasets), updating the parameters of the model
+However, the assumption that the training data follow a fixed distribution during the time has several limitations and many problems cannot be formulated in this framework. For instance, if the learning problem consists of several tasks with different distributions (different image datasets), updating the parameters of the model
 upon the arrival of data from the new task leads to poor performance on the previously learned tasks. 
-The procedure of continuous learning of different tasks with just one model such as a deep neural network is known as lifelong learning. Lifelong learning enables us to learn continually from tones of images, videos, and other media contents generated daily on the internet, without forgetting the learned model based on the previous data. The following figure illustrates the lifelong learning high-level idea. 
+The procedure of continuous learning of different tasks with just one model such as a deep neural network is known as lifelong learning. Lifelong learning enables us to learn 
+continually from tones of images, videos, and other media contents generated daily on the internet, without forgetting the learned model based on the previous data. 
+The following figure illustrates the lifelong learning high-level idea. 
 
 ![](HL.png)
 
@@ -30,13 +32,13 @@ In this section, we introduce several well-known lifelong learning methods propo
 **Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the data distribution mismatch between tasks is limited. 
 Data based approaches are mainly designed for a classification scenario and overall, the need of these approaches to have a preprocessing step before each new task, to record the targets for the previous tasks is an additional limitation. 
 
-### Encoder-based Lifelong Learning (EBLL)
+### Encoder-based Lifelong Learning (EBLL) [2]
 In this method, for each new task, an autoencoder which projects the dataset to a lower dimensional space is learned. Also, a fully connected layer is added to the network
 per task. Combining these two ideas, the network can learn different tasks without completely forgetting the previous tasks.
 
 ![](Fig3.jpg)
 
-### Learning Without Forgetting (LwF)
+### Learning Without Forgetting (LwF) [3]
 This approach defines three sets of parameters: <img src="https://latex.codecogs.com/gif.latex?\theta_s" style="margin-top: 3px"/> are the shared parameters among all different tasks. For each given task, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters
 defined specifically for this task, and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> denotes all the parameters from the previous tasks. <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> parameters are added to the last layer of the network 
 (Typically a fully-connected layer) upon the arrival of new task data. To train this network for the new task, first they freeze <img src="https://latex.codecogs.com/gif.latex?\theta_S" style="margin-top: 3px"/> and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> and train the network 
@@ -49,23 +51,23 @@ optimization of the network for the data of the new task. Thus it can be conside
 Model-based approaches focus on the parameters of the network instead of depending on the task data. They estimate an importance weight for each model parameter and add a regularizer when training a new task that penalizes changes to important parameters.
 The difference between methods in this approach lies in the manner the importance weights are computed. 
 
-###  Elastic Weight Consolidation
+###  Elastic Weight Consolidation [4]
 This method is based on the intution that in an over-parametrized regime (The number of nodes in the network is from the order of data points) there exists a <img src="https://latex.codecogs.com/gif.latex?\theta_B^*" style="margin-top: 3px"/> solution for task B which is very close to 
 <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/> a solution to task A. Based on this idea, they choose a minimizer of the network to task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>.
 
 ![](Fig2.jpg)
 
-###  Synaptic Intelligence (SI)
+###  Synaptic Intelligence (SI) [5]
 In the Synaptic Intelligence work importance weights are computed during training in an online manner. To this end, they record how much the loss would change due to a change in a specific parameter and accumulate this information over the training trajectory. However, also this method has some drawbacks:
 1. Relying on the weight changes in a batch gradient descent might overestimate the importance of the weights, as noted by the authors.
 2. When starting from a pre-trained network, as in most practical computer vision applications, some weights might be used without big changes. As a result, their importance will be underestimated.
 3. The computation of the importance is done during training and fixed later.
 
 
-# Memory Aware Synapses (MAS)
+# Memory Aware Synapses (MAS) [1]
 As a high-level description, the memory-aware synapses is a model-based approach which computes the importance of all network parameters by taking the gradient of output logits with respect to each weight parameter. 
 Then it penalizes the objective function based on how much it changes the weights. If a weight parameter has more importance, the objective function is penalized more. By adding the mentioned regularizer, 
-MAS outperforms the other model-based approaches as we experiment it on different lifelong learning problems.
+MAS outperforms the other model-based approaches discussed above.
 
 The below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the importance of the parameters based on the taking gradient with respect to
 loss, comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast to the previous model-based approaches, MAS estimates
@@ -89,13 +91,11 @@ To clarify the problem suppose we have a simple neural network with two weight p
 following table demonstrate the importance of v and w with respect to each task.
 
 
-![](pict1.png)
+![](Table1.png)
 
-As we can observe, the importance of **w** is 5 times more than **v** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
-we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. We call our method **Alpha-scaling**. 
-
-The following table depicts the properties satisfied by different models.
-As we can observe, by introducing the new parameters to the MAS model, we can outperform it and reduce catastrophic forgetting.
+As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
+we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. In contrast to MAS, our proposed approach considers
+the same importance for all tasks which makes the final performance independent of tasks order. We refer to this feature as **consistency**. The following table depicts the properties satisfied by different models.
 
 
 **Method** | **Type** | **Constant Memory** | **Problem Agnostic** | **On Pre-trained** | **Unlabeled Data** | **Adaptive** | **Consistency**
@@ -107,8 +107,6 @@ IMM | Model | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :x: | :x:
 SI | Model | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :x: | :x:
 MAS | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:
 Alpha | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:
-
-
 
 # Problem Formulation
 We use the model introduced in the paper, to start with and improve it as follows. For a given data point x<sub>k</sub>, the output of the network is  F(x<sub>k</sub>;&theta;). We approximate the gradient as F(x<sub>k</sub>;&theta;+&delta;) - F(x<sub>k</sub>;&theta;) &cong; &sum;<sub>i,j</sub> g<sub>ij</sub>(x<sub>k</sub>)&delta;<sub>ij</sub>
@@ -123,21 +121,26 @@ Note that this equation has infinitely many solutions; so, we should add an arbi
 
 # Implementation Details
 Since Pytorch is more flexible and gives more options for manipulating the gradients in back-propagation and changing the loss function comparing to the Tensorflow library, 
-we implement all codes in Pytorch. We examined our method on the MNIST and Cifar10 datasets. Mnist dataset contains 10 classes each of which corresponds to a digit. We break 
-it into 5 tasks, each include two digits, as follow: task 1: (1,2), task 2: (3,4), task 3: (5,6), task 4: (7,8), task 5: (9,0). For the Cifar10 datasets we divide the dataset
+we implement all codes in Pytorch. We examined our method on the MNIST and CIFAR10 datasets. MNIST dataset contains 10 classes each of which corresponds to a digit. We break 
+it into 5 tasks, each include two digits, as follow: task 1: (1,2), task 2: (3,4), task 3: (5,6), task 4: (7,8), task 5: (9,0). For the CIFAR10 datasets we divide the dataset
 into five tasks: [Task 1: Bird, Automobile], [Task 2: Cat, Deer], [Task 3: Dog, Frog], [Task 4: Horse, Ship], [Task 5: Truck, Airplane]. The implementation is divided into 
 three steps: (i) First, we learn the weights of our convolutional neural network by only considering the task 1. Thus, our first task to learn is the learning of the first two 
 classes (ii) Then, we would learn the tasks 2 to 5, consecutively, by avoiding catastrophic forgetting according to the importance factor described earlier. (iii) Finally, we 
 compute the forgetting coefficient for each task which is the difference between the accuracy of a network that is trained only for that specific task and the accuracy of the 
-trained network for all tasks together. The average forgetting will be the average of forgetting values for all tasks. We define the loss function, importance of the weights 
-and the training procedure in separate python files.
+trained network for all tasks together. The average forgetting will be the average of forgetting values for all tasks. 
 
 # Results
-In this section, we provide the results of running the memory-aware synapses and our variation of this method on the MNIST, and Cifar10 dataset. We compare our variation of the method with the baseline introduced by the paper where there is no optimization over alpha parameters. 
-The forgetting value of a task with respect to a network is the difference between the accuracy of the network on the task when it learns just that particular task, and when it learns all the given tasks sequentially. As we can observe, our variation of the method has less forgetting value for all of the tasks, and hence the average forgetting value of our variation is less than the average forgetting of the original method. The following figure
-compares the accuracy and forgetting of the MAS method and our variation on the mnist dataset.
+In this section, we provide the results of running the MAS and our variation of this method on the MNIST, and CIFAR10 data-sets. We compare our approach with the
+baseline introduced by [1] where there is no optimization over alpha parameters.
 
-## Results on the Mnist dataset
+As we can observe, our approach improves the forgetting value more than twice on average for the MNIST dataset. By forgetting the value of a task, we mean the difference 
+between the accuracy of the model, trained jointly on all tasks and the model trained only on that specific task.
+
+Since all the MNIST classes have very close distributions (white digits on a black background), the alpha coefficients are very close to each other. For instance, when the sum
+of alphas equals to 5, the maximum alpha is 1.03, while the minimum one is 0.97. To observe the impact of our reformulation of the problem we implement our method on the CIFAR10
+dataset. Since the class distributions are more diverse the vulnerability to the forgetting is higher. 
+
+## Results on the MNIST dataset
 (a) shows the forgetting value for each task for three different methods: Baseline (MAS default approach), Our method when the sum of alpha coefficients is N (number of tasks),
 and when the sum of alpha coefficients is 2N. (b) compares the average forgetting of 5 tasks. As we can observe, our method has less forgetting value comparing to the default MAS.
 (c) compares the validation accuracy per epochs for three different settings (Baseline, the sum of alphas equals to N, the sum of alphas equals to 2N).
@@ -151,9 +154,9 @@ queue of tasks, MAS performance is different and it is less than when this task 
 
 ![](Res2.png)
 
-## Results on the Cifar10 dataset
+## Results on the CIFAR10 dataset
 The next figure demonstrates the performance of our method comparing to the original MAS approach. (a) shows the validation accuracy of three different settings for 5 epochs.
-(b) shows the forgetting value per task (each task consists of learning two labels of Cifar10). (c) illustrates that the average forgetting value of our variation, is much less 
+(b) shows the forgetting value per task (each task consists of learning two labels of CIFAR10). (c) illustrates that the average forgetting value of our variation, is much less 
 than the original MAS approach, and finally part (d) shows the worst-case performance of our method when the sum of alpha coefficients is 2N or 3N, is much better than the MAS.
 
 
