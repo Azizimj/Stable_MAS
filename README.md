@@ -26,69 +26,60 @@ We can summarize the assumptions of lifelong learning as follows:
 
 # Existing Approaches
 
-In this section, we introduce several well-known lifelong learning methods proposed in the recent years. Generally speaking, these methods can be divided into two groups: (1) Data-based approaches and (2) Model Based Approaches. We elaborate on these two approaches in the following.
+In this section, we introduce several well-known lifelong learning methods proposed in the recent years. Generally speaking, these methods can be divided into two groups: (1) data-based approaches and (2) model based. In the following, we elaborate on these two approaches.
 
 ## Data-based approaches
 **Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the *distribution mismatch\distance* between tasks is limited. 
-These approaches are mainly designed for a classification scenario. They also need to have a preprocessing step before each task, to record the targets for the previous tasks, which is an additional limitation for them.
+These approaches are mainly designed for a classification scenario. They also need to have a preprocessing step before each task, to record the targets for the previous tasks, which is an additional limitation for them. Some examples of this approach are Encoder-based Lifelong Learning (EBLL) and Learning Without Forgetting (LwF).
 
 ### Encoder-based Lifelong Learning (EBLL) [2]
-In this method, for each new task, an autoencoder which projects the dataset to a lower dimensional space is learned. Also, a fully connected layer is added to the network
-per task. Combining these two ideas, the network can learn different tasks without completely forgetting the previous tasks.
+In this approach, for each new task, an autoencoder which projects the dataset to a lower dimensional space is learned. Also, a fully connected layer is added to the network
+per task. Combining these two ideas, the network can learn different tasks without completely forgetting the previous tasks. The following figure briefly shows this concept.
 
 ![](Fig3.jpg)
 
 ### Learning Without Forgetting (LwF) [3]
-This approach defines three sets of parameters: <img src="https://latex.codecogs.com/gif.latex?\theta_s" style="margin-top: 3px"/> are the shared parameters among all different tasks. For each given task, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters
+This approach defines three sets of parameters: <img src="https://latex.codecogs.com/gif.latex?\theta_s" style="margin-top: 3px"/> are the shared parameters among all different tasks, <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> represents the set of parameters for every given task,
 defined specifically for this task, and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> denotes all the parameters from the previous tasks. <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/> parameters are added to the last layer of the network 
-(Typically a fully-connected layer) upon the arrival of new task data. To train this network for the new task, first they freeze <img src="https://latex.codecogs.com/gif.latex?\theta_S" style="margin-top: 3px"/> and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/> and train the network 
-until the convergence of <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/>. Then they use these parameters as an initilization for joint training of all parameters of the network. This method is based on the 
-optimization of the network for the data of the new task. Thus it can be considered as a data-based approach. 
+(Typically a fully-connected layer) upon the arrival of new task data. To train this network for the new task, first <img src="https://latex.codecogs.com/gif.latex?\theta_S" style="margin-top: 3px"/> and <img src="https://latex.codecogs.com/gif.latex?\theta_0" style="margin-top: 3px"/>  are  freezed and the network trains
+until the convergence of <img src="https://latex.codecogs.com/gif.latex?\theta_n" style="margin-top: 3px"/>. Then these parameters are used as an initilization for a joint training of all parameters in the network. Since this method is based on the 
+optimization of the network for the new task data, it can be considered as a data-based approach. The following figure briefly demonstrates this concept.
 
 ![](Fig4.jpg)
 
 ## Model Based Approaches
-Model-based approaches focus on the parameters of the network instead of depending on the task data. They estimate an importance weight for each model parameter and add a regularizer when training a new task that penalizes changes to important parameters.
-The difference between methods in this approach lies in the manner the importance weights are computed. 
+Model-based approaches focus on the parameters of the network instead of depending on the task data. They estimate an importance weight for each model parameter and add a regularizer when training a new task that penalizes changes in the important parameters.
+The difference between methods in this approach lies in the way that they compute the importance weights. Examples of this approches are Elastic Weight Consolidation, Synaptic Intelligence and Memory Aware Synapses (MAS), which we introduce them in the following.
 
 ###  Elastic Weight Consolidation [4]
-This method is based on the intution that in an over-parametrized regime (The number of nodes in the network is from the order of data points) there exists a <img src="https://latex.codecogs.com/gif.latex?\theta_B^*" style="margin-top: 3px"/> solution for task B which is very close to 
-<img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/> a solution to task A. Based on this idea, they choose a minimizer of the network to task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>.
+This method is based on the intution that in an over-parametrized regime (i.e. when the number of nodes in the network is of order of size of dataset) there exists a <img src="https://latex.codecogs.com/gif.latex?\theta_B^*" style="margin-top: 3px"/> solution for task B which is very close to 
+<img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>, the solution to task A. Based on this idea, they choose a optimal set of parameters for task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>. Below, we illustrate this idea in terms of the optimization path towards it 
 
 ![](Fig2.jpg)
 
 ###  Synaptic Intelligence (SI) [5]
-In the Synaptic Intelligence work importance weights are computed during training in an online manner. To this end, they record how much the loss would change due to a change in a specific parameter and accumulate this information over the training trajectory. However, also this method has some drawbacks:
-1. Relying on the weight changes in a batch gradient descent might overestimate the importance of the weights, as noted by the authors.
+In the Synaptic Intelligence literature, importance weights are computed during training in an online manner. To this end, they record how much the loss would change due to a change in a specific parameter and accumulate this information over the training trajectory. This method has the following drawbacks:
+1. Relying on the weight changes in a batch gradient descent might overestimate the importance of the weights, as noted by the authors of paper [1].
 2. When starting from a pre-trained network, as in most practical computer vision applications, some weights might be used without big changes. As a result, their importance will be underestimated.
-3. The computation of the importance is done during training and fixed later.
-
+3. The computation of the importance is done during training and fixed later which can be problematic for testing.
 
 # Memory Aware Synapses (MAS) [1]
-As a high-level description, the memory-aware synapses is a model-based approach which computes the importance of all network parameters by taking the gradient of output logits with respect to each weight parameter. 
-Then it penalizes the objective function based on how much it changes the weights. If a weight parameter has more importance, the objective function is penalized more. By adding the mentioned regularizer, 
-MAS outperforms the other model-based approaches discussed above.
+The memory-aware synapses is a model-based approach which computes the importance of all network parameters with the gradient of output (e.g. logits) with respect to each weight parameter. 
+Then it penalizes the learning objective function based on how much it changes the weights. If a weight parameter has more importance, the objective function is penalized more. By adding the this regularizer, 
+results show that MAS outperforms the other model-based approaches discussed above.
 
-The below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the importance of the parameters based on the taking gradient with respect to
-loss, comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast to the previous model-based approaches, MAS estimates
-the importance of the parameters, after convergence, based on the sensitivity of the learned function to their changes (b). This allows using additional unlabeled data points (in orange).
-When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b) while adjusting not important parameters 
+The below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the importance of the parameters based on the loss gradient, comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast, MAS estimates
+the importance of the parameters, after convergence, based on the sensitivity of the learned function to their changes (b). This allows using additional unlabeled data points (in orange). This empowers MAS to be used in semisupervised or unsupervised lifelong learning as well as supervised learnings. When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b) while adjusting not important parameters 
 to ensure good performance on the new task (c).
 
 
 ![](MAS1.png)
 
 
-MAS enjoys several properties such as constant memory size, problem agnostic, supporting unlabeled data, adaptability, and also it can be established on top of a pre-trained network on the previous tasks. 
-Problem agnostic property means this method can be generalized to any dataset and it is not limited to specific tasks or datasets. By adaptability, we mean the capability of a method 
-to adapt the learned model continually to a new task from the same or different environment. Thus it means the samples from different tasks should not necessarily follow a unique 
-distribution and can have different ground truth distributions. The Memory-aware Synapses(MAS) satisfies all the properties mentioned above; However, it might not work equally 
-well on all tasks. 
+MAS enjoys several properties such as constant memory size, problem agnostic, supporting unlabeled data, adaptability, and also it can be established on top of a pre-trained network on the previous tasks. Problem agnostic property means this method can be generalized to any dataset and it is not limited to specific tasks or datasets. By adaptability, we mean the capability of a method to adapt the learned model continually to a new task from the same or different environment. Thus this means the samples from different tasks should not necessarily follow a unique distribution and can have different ground truth distributions. Note that, MAS satisfies all the properties mentioned above; However, it might not work equally well on all tasks. 
 
 ## MAS can be biased towards one or more tasks! 
-As we stated above the MAS approach, computes the importance(gradient of the output function) of parameters in the network with respect to each task. Then it aggregates the absolute values of these gradients and regularizing the objective function. Due to the difference in the distributions of tasks, the scale of the gradients can be varied among the tasks. Thus, it can lead to overfitting one or more tasks, and neglecting the rest. Moreover, these differences in scales can affect the importance estimation of each parameter in total comparing to the other weights.
-To clarify the problem suppose we have a simple neural network with two weight parameters v and w, and two tasks T1 and T2. Let the
-following table demonstrate the importance of v and w with respect to each task.
+As we stated above the MAS approach, computes the importance (gradient of the output function) of parameters in the network with respect to each task. Then it aggregates the absolute values of these gradients and regularizes the objective function. Due to the difference in the distributions of tasks, the scale of the gradients can be very different among the tasks. Thus, it can lead to overfitting one or more tasks, and neglecting the rest. Moreover, these differences in scales can affect the importance estimation compared to the other weights. To clarify this problem, suppose we have a simple neural network with two weight parameters v and w, and two tasks T1 and T2. Let the following table demonstrate the importance of v and w with respect to each task.
 
 ![](Table.png)
 
