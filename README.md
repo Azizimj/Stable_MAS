@@ -10,7 +10,7 @@ The procedure of continuous learning of different tasks with just one model such
 continually from tones of images, videos, and other media contents generated daily on the internet, without forgetting the learned model based on the previous data. 
 The following figure illustrates the lifelong learning high-level idea. 
 
-![](HL.png)
+![](Concept.png)
 
 
 A question might arise is whether the classic formulation of supervised learning can lead to reliable performance on different tasks and datasets. The experimental results show that by updating the parameters of a deep neural network upon the arrival of a new task, the performance of the network on previous tasks decreases profoundly. This phenomenon is known as catastrophic forgetting. 
