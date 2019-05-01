@@ -6,30 +6,30 @@ The general objective of classic supervised learning is to minimize the followin
 
 However, the assumption that the training data follow a fixed distribution during time has several limitations and many problems cannot be formulated in this framework. For instance, if the learning problem consists of several tasks with different distributions (e.g. different image datasets), updating the parameters of the model
 upon the arrival of new task data, leads to poor performance on the previously learned tasks. 
-The procedure of continuous learning for different tasks with just one deep neural network model is known as deep lifelong learning. Lifelong learning enables us to learn 
+The procedure of continuous learning for different tasks with a single model (e.g. a deep neural network) is known as lifelong learning. Lifelong learning enables us to learn 
 continually from tones of images, videos, and other media contents generated daily on the internet, without forgetting the learned model based on the previous data. 
 The following figure illustrates the lifelong learning high-level idea. Figure (a) shows for a cetrian task (2nd task) some parameters of the network would be involved. In classic machine learning approaches when the next task comes in consideration using the same of parameters as the previous task, parameters get adjusted for the new task. This leads drastic forgetting and reduction of validation accuracy if we test previous tasks on the network. As shown in figure (c) a lifelong based machine learning approach trys to change the value of the shared parameters (the intersection in the figure) such that it is still beneficial for previous tasks depending on their importance for different tasks.  
 
 ![](Concept.png)
 
 
-A question might arise is whether the classic formulation of supervised learning can lead to reliable performance on different tasks and datasets. The experimental results show that by updating the parameters of a deep neural network upon the arrival of a new task, the performance of the network on previous tasks decreases profoundly. This phenomenon is known as catastrophic forgetting. 
-Lifelong learning has emerged to address the issue of catastrophic forgetting and enable learning models to have an acceptable performance on both current and previous tasks.  
+A question might arise is "whether the classic formulation of learning can lead to reliable performance on different tasks\datasets?". The experimental results show that by updating the parameters of a deep neural network upon the arrival of the new tasks, the performance of the network on previous tasks decreases profoundly. This phenomenon is known as catastrophic forgetting. 
+As such, deep lifelong learning has emerged to address the issue of catastrophic forgetting and enable learning models to have an acceptable performance on both current and previous tasks.  
 We can summarize the assumptions of lifelong learning as follows: 
 
-1. In contrast to the conventional supervised learning, Lifelong learning is not task-specific, and its goal is to learn different tasks during the time. 
-2. When a new task arrives, the model does not have access to sample data from the previous tasks. 
-3. It is similar to the online learning in a sense that the entire data from different tasks are not available and they arrive during the time; However, despite the online learning, we cannot assume the data points are sampled from a single data distribution. Each task can have a unique distribution different from other tasks. In this manner, lifelong learning is a more general problem, and thus harder to solve.
+1. In contrast to the conventional (supervised) learning, Lifelong learning is not task-specific, and its goal is to learn different tasks over time. This makes lifelong learning as a new method for timeseries learning also.
+2. When a new task arrives, the model does not have access to the data of the previous tasks. 
+3. It is similar to online learning in a sense that the entire data from different tasks are not available and they arrive during the time; However, despite the online learning, we cannot assume that data samples are from a single data distribution. Each task can have a unique and different distribution. Thus, lifelong learning is a more general problem, and therefore harder to solve.
 
 ![](Fig1.png)
 
 
 # Existing Approaches
 
-In this section, we introduce several well-known lifelong learning methods proposed in recent years. Generally speaking, these methods can be divided into two groups:
+In this section, we introduce several well-known lifelong learning methods proposed in the recent years. Generally speaking, these methods can be divided into two groups: (1) Data-based approaches and (2) Model Based Approaches. We elaborate on these two approaches in the following.
 
 ## Data-based approaches
-**Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the data distribution mismatch between tasks is limited. 
+**Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the *distribution mismatch\distance* between tasks is limited. 
 Data based approaches are mainly designed for a classification scenario and overall, the need of these approaches to have a preprocessing step before each new task, to record the targets for the previous tasks is an additional limitation. 
 
 ### Encoder-based Lifelong Learning (EBLL) [2]
