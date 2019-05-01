@@ -140,26 +140,21 @@ of alphas equals to 5, the maximum alpha is 1.03, while the minimum one is 0.97.
 dataset. Since the class distributions are more diverse the vulnerability to the forgetting is higher. 
 
 ## Results on the MNIST dataset
-Figure below shows the forgetting of each task for three different scenarios. Baseline means the original MAS formulation [1] in which the &alpha;<sub>t</sub> ; is not optimized and it is equal for all tasks. Other methods are based on optimizing the  &alpha;<sub>t</sub>  value for all tasks by solving the earlier explained equations. Here, we play with hyperparameter &lambda; in &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda; and change it to &lambda == N, 2N,... to investigate its impact. Please note that N indicates the number of tasks. By comparing the forgetting value of each task for difference scenarios, it is evident that there is more fluctuation on Baseline compare with our approach. This declares the consistency of our technique on forgetting per task.
+Figure below shows the forgetting of each task for three different scenarios. Baseline means the original MAS formulation [1] in which the &alpha;<sub>t</sub> is not optimized and it is equal for all tasks. Other methods are based on optimizing the  &alpha;<sub>t</sub>  value for all tasks by solving the earlier explained equations. Here, we play with hyperparameter &lambda; in &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda; and change it to &lambda; == N, 2N,... to investigate its impact. Please note that N indicates the number of tasks. By comparing the forgetting value of each task for difference scenarios, it is evident that there is more fluctuation on Baseline compare with our approach. This declares the consistency of our technique on forgetting per task.
 
 ![](MNIST1.png)
 
-To have a sense of overall performance of our approach compare with the baseline, we calculate the average and maximum forgetting for all five tasks. Figure below shows the result for average and maximum forgetting. 
+To have a sense of overall performance of our approach compare with the baseline, we calculate the average and maximum forgetting for all five tasks. Figure below shows the result for average and maximum forgetting. Figure (a) shows that average forgetting in almost 50% lower than the baseline. Also, the maximum forgetting is also more three times lower in our approach compare with the baseline. This plot shows by adding the alpha coefficients, the worst-case performance of the neural network on different tasks is decreased compared to MAS
 
 ![](MNIST2.png)
 
-(a) shows the forgetting value for each task for three different methods: Baseline (MAS default approach), Our method when the sum of alpha coefficients is N (number of tasks),
-and when the sum of alpha coefficients is 2N. (b) compares the average forgetting of 5 tasks. As we can observe, our method has less forgetting value comparing to the default MAS.
-(c) compares the validation accuracy per epochs for three different settings (Baseline, the sum of alphas equals to N, the sum of alphas equals to 2N).
+A naive way of avoiding forgetting is stop learning new tasks! Here, we investigate the validation accuracy of these three scenarios to show although we reduce the forgetting, our approach keeps learning. As it can be seen from figure below, at the first epochs our approach with &sum;<sub>t</sub> &alpha;<sub>t</sub>= N has slightly lower validation accuracy. However, it gets better after 13th epoch and it has even higher accuracy than the baseline at some points.
 
-![](Res1.png)
+![](MNIST3.png)
 
-Moreover, in the next plot (a), we can see the maximum forgetting value among all tasks for four different settings (MAS, sum alphas = N, sum alphas = 1.5N, sum alphas = 2N). This plot shows by adding the alpha coefficients, the
-worst-case performance of the neural network on different tasks is decreased compared to MAS. (b) shows the independence of our method comparing to MAS from the order of tasks. 
-In this experiment, we change the learning order of task [1, 2] from first to fifth. MAS works better if this task is the last one. But if the task is the first one in the
-queue of tasks, MAS performance is different and it is less than when this task is the last one. However, in our method, the variation in the accuracy by changing the order of task in the task queue is less than MAS, due to the fact that we put equal weights on all tasks.
+Figure below shows the independence of our method comparing to baseline from the order of tasks. In this experiment, we change the learning order of task [1, 2] from first to fifth. MAS works better if this task is the last one (fifth). But if the task is the first one in the queue of tasks, MAS performance is different and it is less than when this task is the last one. However, in our method, the variation in the accuracy by changing the order of task in the task queue is less than MAS, due to the fact that we put equal weights on all tasks.
 
-![](Res2.png)
+![](MNIST4.png)
 
 ## Results on the CIFAR10 dataset
 The next figure demonstrates the performance of our method comparing to the original MAS approach. (a) shows the validation accuracy of three different settings for 5 epochs.
