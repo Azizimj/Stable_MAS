@@ -110,14 +110,13 @@ With &lambda; a hyperparameter for the regularizer and &theta;<sub>tij</sub>* is
 Note that this equation has infinitely many solutions; so, we should add an arbitrary constraint like &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda;. Later on, we demonstrate that how this arbitrary constraint can be utilized as a hyperparameter to improve the results.
 
 # Implementation Details
-Since Pytorch is more flexible and gives more options for manipulating the gradients in back-propagation and changing the loss function comparing to the Tensorflow library, 
-we implement all codes in Pytorch. We examined our method on the MNIST and CIFAR10 datasets. MNIST dataset contains 10 classes each of which corresponds to a digit. We break 
-it into 5 tasks, each include two digits, as follow: task 1: (1,2), task 2: (3,4), task 3: (5,6), task 4: (7,8), task 5: (9,0). For the CIFAR10 datasets we divide the dataset
+Using the flexibility of *Pytorch* on manipulating the gradients in back-propagation and changing the loss function, we examined our method on the MNIST and CIFAR10 datasets. [MNIST](http://yann.lecun.com/exdb/mnist/) dataset contains 10 classes each of which corresponds to a digit. We break 
+it into 5 tasks, each including two digits, as follow: task 1: (1,2), task 2: (3,4), task 3: (5,6), task 4: (7,8), task 5: (9,0). In the [CIFAR10](https://www.cs.toronto.edu/~kriz/cifar.html) datasets we also divide the dataset
 into five tasks: [Task 1: Bird, Automobile], [Task 2: Cat, Deer], [Task 3: Dog, Frog], [Task 4: Horse, Ship], [Task 5: Truck, Airplane]. The implementation is divided into 
 three steps: (i) First, we learn the weights of our convolutional neural network by only considering the task 1. Thus, our first task to learn is the learning of the first two 
-classes (ii) Then, we would learn the tasks 2 to 5, consecutively, by avoiding catastrophic forgetting according to the importance factor described earlier. (iii) Finally, we 
-compute the forgetting coefficient for each task which is the difference between the accuracy of a network that is trained only for that specific task and the accuracy of the 
-trained network for all tasks together. The average forgetting will be the average of forgetting values for all tasks. 
+classes (ii) Then, we train on tasks 2 to 5, consecutively, by avoiding catastrophic forgetting according to the approach described earlier. (iii) Finally, we 
+compute the forgetting coefficient for each task which is the difference between *the accuracy of the network trained only for that specific task* and *the accuracy of the network
+trained on all tasks together*. The average forgetting will be the average of forgetting values for all tasks. 
 
 # Results
 In this section, we provide the results of running the MAS and our variation of this method on the MNIST, and CIFAR10 data-sets. We compare our approach with the
