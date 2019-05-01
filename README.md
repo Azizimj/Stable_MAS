@@ -157,10 +157,9 @@ Figure below shows the independence of our method comparing to baseline from the
 ![](MNIST4.png)
 
 ## Results on the CIFAR10 dataset
-The next figure demonstrates the performance of our method comparing to the original MAS approach. (a) shows the validation accuracy of three different settings for 5 epochs.
-(b) shows the forgetting value per task (each task consists of learning two labels of CIFAR10). (c) illustrates that the average forgetting value of our variation, is much less 
-than the original MAS approach, and finally part (d) shows the worst-case performance of our method when the sum of alpha coefficients is 2N or 3N, is much better than the MAS.
-
+In order to validate the superiority of our approach we run our code on another dataset which is CIFAR10. Figure below includes the results for CIFAR10 with the similar setup that is mentioned for MNIST. 
+Figure (a) shows the validation accuracy of three different settings for 5 epochs. Since CIFAR10 is much larger dataset than MNIST, we confine the number epochs to 5 just to limit the running time. This is also evident from the accuracy percentage which is started from ~50% whereas it is started from ~98% on MNIST. Although the accuracy of the baseline is better for these five epochs, the accuracy for our approach is still acceptable and the system keep learning.
+Figure (b) shows the forgetting value per task (each task consists of learning two labels of CIFAR10). Figure (c) and (d) illustrate the average and maximum forgetting, respectively. These results indicate significant performance improvement that average forgetting is 30 times less than baseline when &sum;<sub>t</sub> &alpha;<sub>t</sub>= 2N. We believe this outstanding improvement is because of the fact that the oversimplification of importance update in MAS is clearer in a more complex dataset such as CIFAR10 rather than MNIST.  
 
 ![](Res3.png)  
 
