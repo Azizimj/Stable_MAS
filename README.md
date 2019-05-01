@@ -30,7 +30,7 @@ In this section, we introduce several well-known lifelong learning methods propo
 
 ## Data-based approaches
 **Data-based approaches** use data from the new task to approximate the performance of the previous tasks. This works best if the *distribution mismatch\distance* between tasks is limited. 
-Data based approaches are mainly designed for a classification scenario and overall, the need of these approaches to have a preprocessing step before each new task, to record the targets for the previous tasks is an additional limitation. 
+These approaches are mainly designed for a classification scenario. They also need to have a preprocessing step before each task, to record the targets for the previous tasks, which is an additional limitation for them.
 
 ### Encoder-based Lifelong Learning (EBLL) [2]
 In this method, for each new task, an autoencoder which projects the dataset to a lower dimensional space is learned. Also, a fully connected layer is added to the network
