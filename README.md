@@ -92,7 +92,7 @@ following table demonstrate the importance of v and w with respect to each task.
 
 ![](table.png)
 
-As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
+As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
 we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. In contrast to MAS, our proposed approach considers
 the same importance for all tasks which makes the final performance independent of tasks order. We refer to this feature as **consistency**. The following table depicts the properties satisfied by different models.
 
