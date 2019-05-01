@@ -72,20 +72,20 @@ The below figure shows how MAS is different from other penalty-based approaches.
 the importance of the parameters, after convergence, based on the sensitivity of the learned function to their changes (b). This allows using additional unlabeled data points (in orange). This empowers MAS to be used in semisupervised or unsupervised lifelong learning as well as supervised learnings. When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b) while adjusting not important parameters 
 to ensure good performance on the new task (c).
 
-
 ![](MAS1.png)
-
 
 MAS enjoys several properties such as constant memory size, problem agnostic, supporting unlabeled data, adaptability, and also it can be established on top of a pre-trained network on the previous tasks. Problem agnostic property means this method can be generalized to any dataset and it is not limited to specific tasks or datasets. By adaptability, we mean the capability of a method to adapt the learned model continually to a new task from the same or different environment. Thus this means the samples from different tasks should not necessarily follow a unique distribution and can have different ground truth distributions. Note that, MAS satisfies all the properties mentioned above; However, it might not work equally well on all tasks. 
 
 ## MAS can be biased towards one or more tasks! 
 As we stated above the MAS approach, computes the importance (gradient of the output function) of parameters in the network with respect to each task. Then it aggregates the absolute values of these gradients and regularizes the objective function. Due to the difference in the distributions of tasks, the scale of the gradients can be very different among the tasks. Thus, it can lead to overfitting one or more tasks, and neglecting the rest. Moreover, these differences in scales can affect the importance estimation compared to the other weights. To clarify this problem, suppose we have a simple neural network with two weight parameters v and w, and two tasks T1 and T2. Let the following table demonstrate the importance of v and w with respect to each task.
 
-![](Table.png)
+![](table.png)
 
-As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
-we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. In contrast to MAS, our proposed approach considers
-the same importance for all tasks which makes the final performance independent of tasks order. We refer to this feature as **consistency**. The following table depicts the properties satisfied by different models.
+As we can observe, the importance of **v** is 5 times more than **w** in task 1. But since the scales of importances are different among two tasks, at the end, both **v** and **w** nearly have the same importance in the regularization term. Thus, this can lead to poor performance in task 1. To cope with this issue,
+we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. On top of MAS, our proposed MAS approach considers
+the same importance for all tasks which makes the final performance independent of tasks order. We refer to this feature as **consistency**. 
+
+Finally, The following table depicts the properties satisfied by different models discussed above.
 
 
 **Method** | **Type** | **Constant Memory** | **Problem Agnostic** | **On Pre-trained** | **Unlabeled Data** | **Adaptive** | **Consistency**
