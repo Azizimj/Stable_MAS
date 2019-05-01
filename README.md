@@ -4,11 +4,11 @@ The general objective of classic supervised learning is to minimize the followin
 
 ![](eq1.jpg)
 
-However, the assumption that the training data follow a fixed distribution during the time has several limitations and many problems cannot be formulated in this framework. For instance, if the learning problem consists of several tasks with different distributions (different image datasets), updating the parameters of the model
-upon the arrival of data from the new task leads to poor performance on the previously learned tasks. 
-The procedure of continuous learning of different tasks with just one model such as a deep neural network is known as lifelong learning. Lifelong learning enables us to learn 
+However, the assumption that the training data follow a fixed distribution during time has several limitations and many problems cannot be formulated in this framework. For instance, if the learning problem consists of several tasks with different distributions (e.g. different image datasets), updating the parameters of the model
+upon the arrival of new task data, leads to poor performance on the previously learned tasks. 
+The procedure of continuous learning for different tasks with just one deep neural network model is known as deep lifelong learning. Lifelong learning enables us to learn 
 continually from tones of images, videos, and other media contents generated daily on the internet, without forgetting the learned model based on the previous data. 
-The following figure illustrates the lifelong learning high-level idea. Figure (a) shows for a cetrian task (2nd task) some parameters of the network would be involved. In classic machine learning approaches when the next task come into the network and it would like to use the same parameters as the previous task it just overrides on those parameters. This leads drastic forgetting and reduction of validation accuracy if we test previous tasks over the network. As shown in figure (c) a lifelong based machine learning approach trys to change the value of the shared parameter such that it is still beneficial for previous tasks depending on their importance for different tasks. 
+The following figure illustrates the lifelong learning high-level idea. Figure (a) shows for a cetrian task (2nd task) some parameters of the network would be involved. In classic machine learning approaches when the next task comes in consideration using the same of parameters as the previous task, parameters get adjusted for the new task. This leads drastic forgetting and reduction of validation accuracy if we test previous tasks on the network. As shown in figure (c) a lifelong based machine learning approach trys to change the value of the shared parameters (the intersection in the figure) such that it is still beneficial for previous tasks depending on their importance for different tasks.  
 
 ![](Concept.png)
 
