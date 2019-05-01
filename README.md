@@ -90,9 +90,9 @@ As we stated above the MAS approach, computes the importance(gradient of the out
 To clarify the problem suppose we have a simple neural network with two weight parameters v and w, and two tasks T1 and T2. Let the
 following table demonstrate the importance of v and w with respect to each task.
 
-![](table.png)
+![](Table.png)
 
-As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
+As we can observe, the importance of **v** is 5 times more than **w** with respect to task 1. But since the scales of weights importance are different among two tasks, at the end of the day, both **v** and **w** nearly have the same importance in the regularization term. This can lead to poor performance in task 1. To cope with this issue,
 we introduce new scaling parameters per task to equalize the importance of different tasks and remove the bias towards one or more tasks. In contrast to MAS, our proposed approach considers
 the same importance for all tasks which makes the final performance independent of tasks order. We refer to this feature as **consistency**. The following table depicts the properties satisfied by different models.
 
@@ -140,11 +140,13 @@ of alphas equals to 5, the maximum alpha is 1.03, while the minimum one is 0.97.
 dataset. Since the class distributions are more diverse the vulnerability to the forgetting is higher. 
 
 ## Results on the MNIST dataset
-Figure below shows the forgetting of each task for three different secnario. 
+Figure below shows the forgetting of each task for three different scenarios. Baseline means the original MAS formulation [1] in which the &alpha<sub>t is not optimized and it is equal for all tasks. Other methods are based on optimizing the &alpha<sub>t value for all tasks by solving the earlier explained equations. Here, we play with hyperparameter &lambda in &sum;<sub>t</sub> &alpha;<sub>t</sub>= &lambda and change it to &lambda == N, 2N,... to investigate its impact. Please note that N indicates the number of tasks. By comparing the forgetting value of each task for difference scenarios, it is evident that there is more fluctuation on Baseline compare with our approach. This declares the consistency of our technique on forgetting per task.
 
 ![](MNIST1.png)
 
+To have a sense of overall performance of our approach compare with the baseline, we calculate the average and maximum forgetting for all five tasks. Figure below shows the result for average and maximum forgetting. 
 
+![](MNIST2.png)
 
 (a) shows the forgetting value for each task for three different methods: Baseline (MAS default approach), Our method when the sum of alpha coefficients is N (number of tasks),
 and when the sum of alpha coefficients is 2N. (b) compares the average forgetting of 5 tasks. As we can observe, our method has less forgetting value comparing to the default MAS.
