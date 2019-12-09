@@ -53,7 +53,7 @@ The difference between methods in this approach lies in the way that they comput
 
 ###  Elastic Weight Consolidation [4]
 This method is based on the intution that in an over-parametrized regime (i.e. when the number of nodes in the network is of order of size of dataset) there exists a <img src="https://latex.codecogs.com/gif.latex?\theta_B^*" style="margin-top: 3px"/> solution for task B which is very close to 
-<img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>, the solution to task A. Based on this idea, they choose a optimal set of parameters for task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>. Below, we illustrate this idea in terms of the optimization path towards it 
+<img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>, the solution to task A. Based on this idea, they choose an optimal set of parameters for task B which is within a low-radius ball around <img src="https://latex.codecogs.com/gif.latex?\theta_A^*" style="margin-top: 3px"/>. Below, we illustrate this idea in terms of the optimization path towards it 
 
 ![](Fig2.jpg)
 
