@@ -65,11 +65,11 @@ In the Synaptic Intelligence literature, importance weights are computed during 
 
 # Memory Aware Synapses (MAS) [1]
 The memory-aware synapses is a model-based approach which computes the importance of all network parameters with the gradient of output (e.g. logits) with respect to each weight parameter. 
-Then it penalizes the learning objective function based on how much it changes the weights. If a weight parameter has more importance, the objective function is penalized more. By adding the this regularizer, 
-results show that MAS outperforms the other model-based approaches discussed above.
+Then it penalizes the learning objective function based on how much it changes the weights. If a weight parameter has more importance, the objective function is penalized more. By adding this regularizer, 
+results have shown MAS outperforms other model-based approaches discussed above.
 
-The below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the importance of the parameters based on the loss gradient, comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast, MAS estimates
-the importance of the parameters, after convergence, based on the sensitivity of the learned function to their changes (b). This allows using additional unlabeled data points (in orange). This empowers MAS to be used in semisupervised or unsupervised lifelong learning as well as supervised learnings. When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b) while adjusting not important parameters 
+Below figure shows how MAS is different from other penalty-based approaches. Other penalty-based approaches in the literature estimate the importance of the parameters based on the loss gradient, comparing the network output (light blue) with the ground truth labels (green) using training data (in yellow) (a). In contrast, MAS estimates
+the importance of the parameters, after convergence, based on the learned function's sensitivity to their changes (b). This allows using additional unlabeled data points (in orange). This empowers MAS to be used in semisupervised or unsupervised lifelong learning as well as supervised learnings. When learning a new task, changes to important parameters are penalized, the function is preserved over the domain densely sampled in (b) while adjusting not important parameters 
 to ensure good performance on the new task (c).
 
 ![](MAS1.png)
