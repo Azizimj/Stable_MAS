@@ -89,7 +89,7 @@ Finally, The following table depicts the properties satisfied by different model
 
 
 **Method** | **Type** | **Constant Memory** | **Problem Agnostic** | **On Pre-trained** | **Unlabeled Data** | **Adaptive** | **Consistency**
---- | --- | --- | --- | --- | --- | --- | ---
+:-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:
 LwF | Data | :heavy_check_mark: | :x: | :heavy_check_mark: | :x: | :x: | :x:
 EBLL | Data | :x: | :x: | :x: | :x: | :x: | :x:
 EWC | Model | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :x:
